@@ -24,13 +24,21 @@ pipeline {
                 }
             }
         } */
-        stage('Dependency-Check') {
+        /*stage('Dependency-Check') {
            steps {
                dependencyCheck additionalArguments: '', odcInstallation: 'dep-check-auto'
                dependencyCheckPublisher pattern: ''
                archiveArtifacts allowEmptyArchive: true, artifacts: 'dependency-check-report.xml', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
                sh ' rm -rf dependency-check-report.xml*'
            }
+        }*/
+        stage('Dependency-Check') {
+            steps {
+                dependencyCheck additionalArguments: '--nvdApiKey eb05d764-8ab1-4ac9-99a6-f254c6b30d50', odcInstallation: 'dep-check-auto'
+                dependencyCheckPublisher pattern: ''
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'dependency-check-report.xml', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                sh ' rm -rf dependency-check-report.xml*'
+            }
         }
     }
 }
