@@ -4,7 +4,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/ScaleSec/vulnado.git'
+                script {
+                    checkout scm
+                }
             }
         }
         stage('Build') {
