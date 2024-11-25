@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    tools {
+        3.9.9
+    }
     stages {
         stage('Checkout') {
             steps {
