@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        maven '3.9.9'  // Name of your Maven installation
+        /*maven '3.9.9'  // Name of your Maven installation */
         dependencyCheck 'dep-check-auto' // Name of your Dependency-Check installation
     }
     stages {
@@ -11,12 +11,12 @@ pipeline {
                     checkout scm
                 }
             }
-        }
+        } /*
         stage('Build') {
             steps {
                 sh 'mvn clean package'
             }
-        } 
+        } */
        /* stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv(installationName: 'sonar-local') {
