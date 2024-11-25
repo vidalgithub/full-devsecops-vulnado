@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    tools {
-        maven '3.9.9'
-    }
 
     stages {
         stage('Checkout') {
@@ -14,7 +11,6 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'mvn --version'
                 sh 'mvn clean package'
             }
         } /*
@@ -24,6 +20,14 @@ pipeline {
                   sh "mvn clean verify sonar:sonar -Dsonar.projectKey=vulnado -Dsonar.projectName='vulnado'"
                 }
             }
-        }*/
+        } */
+        stage('Dependency-Check') {
+   steps {
+       dependencyCheck additionalArguments: '', odcInstallation: 'dep-check-auto'
+       dependencyCheckPublisher pattern: ''
+       archiveArtifacts allowEmptyArchive: true, artifacts: 'dependency-check-report.xml', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+sh ' rm -rf dependency-check-report.xml*'
+   }
+  }
     }
 }
