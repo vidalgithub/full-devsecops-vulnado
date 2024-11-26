@@ -72,7 +72,7 @@ pipeline {
                 sh ' rm -rf grype.txt'
             }
         }
-        stage('DAST') {
+        stage('DAST - OWASP ZAP') {
             steps {
                 
               sh'''
