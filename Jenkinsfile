@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
     tools {
         maven '3.9.9'  // Name of your Maven installation 
     }
