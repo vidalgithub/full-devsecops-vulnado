@@ -65,6 +65,13 @@ pipeline {
                 )
             }
         }
+        stage('Container Security') {
+            steps {
+                sh 'grype vulnerables/web-dvwa:latest > grype.txt'
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'grype.txt', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                sh ' rm -rf grype.txt'
+            }
+        }
 
     }
 }
