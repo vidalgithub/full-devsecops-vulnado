@@ -51,6 +51,9 @@ pipeline {
             
         }
         stage('Secrets Detection') {
+            environment {
+                 PATH = "/var/lib/jenkins/.local/bin:${env.PATH}"
+            }
             steps {
                 sh 'detect-secrets scan . > secrets.txt'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'secrets.txt', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
