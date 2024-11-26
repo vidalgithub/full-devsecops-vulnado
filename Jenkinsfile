@@ -56,5 +56,15 @@ pipeline {
 
             }
         }
+        stage('SCA-SNYK') {
+            steps {
+                snykSecurity(
+                  snykInstallation: 'snyk',
+                  snykTokenId: 'snykToken',
+                  failOnIssues: false,
+                )
+            }
+        }
+
     }
 }
