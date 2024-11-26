@@ -52,7 +52,7 @@ pipeline {
         }
         stage('Secrets Detection') {
             steps {
-                sh '${DETECT_SECRETS}/detect-secrets scan . > secrets.txt'
+                sh 'detect-secrets scan . > secrets.txt'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'secrets.txt', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
                 sh ' rm -rf secrets.txt'
 
