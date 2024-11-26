@@ -34,7 +34,6 @@ pipeline {
         }*/
         stage('Dependency-Check') {
             steps {
-                //dependencyCheck additionalArguments: '--nvdApiKey eb05d764-8ab1-4ac9-99a6-f254c6b30d50', odcInstallation: 'dep-check-auto'
                 dependencyCheck additionalArguments: '--nvdApiKey ${NVDAPIKEY}', odcInstallation: 'dep-check-auto'
                 dependencyCheckPublisher pattern: ''
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'dependency-check-report.xml', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
@@ -49,12 +48,8 @@ pipeline {
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'sbom*', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
                 sh ' rm -rf sbom*'
             }
-            
         }
         stage('Secrets Detection') {
-           // environment {
-             //   PATH = "/var/lib/jenkins/.local/bin:${env.PATH}"
-           // }
             steps {
                 sh '${DETECTSECRETS}/detect-secrets scan . > secrets.txt'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'secrets.txt', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
