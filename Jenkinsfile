@@ -31,7 +31,7 @@ pipeline {
                sh ' rm -rf dependency-check-report.xml*'
            }
         }*/
-        stage('Dependency-Check') {
+        stage('Dependency Check - ODC') {
             steps {
                 dependencyCheck additionalArguments: '--nvdApiKey ${NVDAPIKEY}', odcInstallation: 'dep-check-auto'
                 dependencyCheckPublisher pattern: ''
@@ -48,7 +48,7 @@ pipeline {
                 sh ' rm -rf sbom*'
             }
         }
-        stage('Secrets Detection') {
+        stage('Secrets Detection - DETECT-SECRETS') {
             steps {
                 sh '${DETECTSECRETS}/detect-secrets scan . > secrets.txt'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'secrets.txt', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
@@ -56,7 +56,7 @@ pipeline {
 
             }
         }
-        stage('SCA-SNYK') {
+        stage('SCA - SNYK') {
             steps {
                 snykSecurity(
                   snykInstallation: 'snyk',
@@ -65,7 +65,7 @@ pipeline {
                 )
             }
         }
-        stage('Container Security') {
+        stage('Container Security - GRYPE') {
             steps {
                 sh 'grype vulnerables/web-dvwa:latest > grype.txt'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'grype.txt', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
