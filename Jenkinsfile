@@ -72,6 +72,21 @@ pipeline {
                 sh ' rm -rf grype.txt'
             }
         }
-
+        stage('DAST') {
+            steps {
+                
+              sh'''
+                zap-cli start --start-options -daemon
+                zap-cli status
+                zap-cli open-url ${TARGET_URL}
+                zap-cli spider ${TARGET_URL}
+                zap-cli active-scan ${TARGET_URL}
+                zap-cli -v report -o report-zap-cli-jenkins.md -f md
+                zap-cli shutdown
+                '''  
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'report-zap-cli-jenkins.md', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                sh ' rm -rf report-zap-cli-jenkins.md'
+            }
+        }
     }
 }
