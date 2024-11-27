@@ -28,7 +28,14 @@ pipeline {
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv(installationName: 'sonarqube-10.7') {
-                    sh "mvn clean package sonar:sonar"
+                    '''
+                    mvn clean verify sonar:sonar \
+                      -Dsonar.projectKey=demoapp-project \
+                      -Dsonar.projectName='demoapp-project' \
+                      -Dsonar.host.url=http://sonarqube.beitcloud.com:9000 \
+                      -Dsonar.token=sqp_b1fe7cd624cca76539df32df978e4c4e0433f6b3
+                    '''
+                    //sh "mvn clean package sonar:sonar"
                     //sh "mvn clean verify sonar:sonar -Dsonar.projectKey=vulnado -Dsonar.projectName='vulnado'"
                 }
             }
