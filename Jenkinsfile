@@ -9,7 +9,7 @@ pipeline {
     environment {
         TARGET_URL = 'http://testphp.vulnweb.com/'
         ZAP_PATH = '/var/lib/jenkins/ZAP_2.15.0/zap.sh'
-        ZAP_API_KEY = 'j1b1q6npi9e6dt3n1p2j1p8lvc' // Get this from ZAP UI if necessary
+        ZAP_API_KEY = '90auo26dsn27jujq9pbopsai8v' // Get this from ZAP UI if necessary
         ZAP_PORT = '8081'
     }
     stages {
