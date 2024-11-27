@@ -25,21 +25,14 @@ pipeline {
                 sh 'mvn clean package'
             }
         } 
-       /* stage('SonarQube Analysis') {
+        stage('SonarQube Analysis') {
             steps{
-                withSonarQubeEnv(installationName: 'sonar-local') {
+                withSonarQubeEnv(installationName: 'sonarqube-10.7') {
                   sh "mvn clean verify sonar:sonar -Dsonar.projectKey=vulnado -Dsonar.projectName='vulnado'"
                 }
             }
-        } */
-        /*stage('Dependency-Check') {
-           steps {
-               dependencyCheck additionalArguments: '', odcInstallation: 'dep-check-auto'
-               dependencyCheckPublisher pattern: ''
-               archiveArtifacts allowEmptyArchive: true, artifacts: 'dependency-check-report.xml', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
-               sh ' rm -rf dependency-check-report.xml*'
-           }
-        }*/
+        } 
+
         stage('Dependency Check - ODC') {
             steps {
                 dependencyCheck additionalArguments: '--nvdApiKey ${NVDAPIKEY}', odcInstallation: 'dep-check-auto'
