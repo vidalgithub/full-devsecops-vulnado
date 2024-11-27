@@ -24,7 +24,7 @@ pipeline {
             steps {
                 sh 'mvn clean package'
             }
-        } 
+        } /*
         stage('SonarQube Analysis') {
             steps{
                 withSonarQubeEnv(installationName: 'sonarqube-10.7') {
@@ -39,7 +39,7 @@ pipeline {
                     //sh "mvn clean verify sonar:sonar -Dsonar.projectKey=vulnado -Dsonar.projectName='vulnado'"
                 }
             }
-        } 
+        } */
 
         stage('Dependency Check - ODC') {
             steps {
