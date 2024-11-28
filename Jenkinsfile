@@ -49,33 +49,32 @@ pipeline {
                 sh ' rm -rf dependency-check-report.xml*'
             }
         }*/
-        stage('Dependency Check - ODC') {
+        stage('Dependency Check - ODC') { 
             steps {
+                // Run dependency check
                 dependencyCheck additionalArguments: '--nvdApiKey ${NVDAPIKEY}', odcInstallation: 'dep-check-auto'
-                dependencyCheckPublisher pattern: ''
+                
+                // Publish the report
+                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+                
+                // Archive the report
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'dependency-check-report.xml', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
                 
-                // Verify that the report exists and check its contents
-                sh 'ls -l dependency-check-report.xml'
-                sh 'cat dependency-check-report.xml'
-        
+                // Remove the report files after the build
+                //#sh 'rm -rf dependency-check-report.xml*'
+                
+                // Check for severity levels (HIGH, CRITICAL, MEDIUM) and fail the job if found
                 script {
-                    // Read and parse the XML report
-                    def xml = readFile 'dependency-check-report.xml'
-                    def parser = new XmlParser()
-                    def report = parser.parseText(xml)
-        
-                    // Check for vulnerabilities with HIGH, CRITICAL, or MEDIUM severity
-                    def highSeverityFound = report.'*/vulnerability'.find { it.@severity == 'HIGH' || it.@severity == 'CRITICAL' || it.@severity == 'MEDIUM' }
-                    if (highSeverityFound) {
-                        error("Error: High or Critical vulnerabilities found in dependency check report")
+                    // Use cat and grep to check for the patterns in the report
+                    def severityCheck = sh(script: "cat dependency-check-report.xml | grep -i -E 'critical|high|medium'", returnStatus: true)
+                    
+                    // If the grep command finds any matching lines, it will return a non-zero status, so we fail the build
+                    if (severityCheck != 0) {
+                        error("Build failed due to critical, high, or medium severity issues in dependency check report")
                     }
                 }
-                
-                // Clean up report after processing
-                sh 'rm -rf dependency-check-report.xml*'
             }
-        }
+        }           
         stage('Generate SBOM') {
             steps {
                 sh '''
