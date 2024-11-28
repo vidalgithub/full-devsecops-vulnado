@@ -64,7 +64,7 @@ pipeline {
                 sh 'rm -rf dependency-check-report.xml*'
                 
                 // Check for severity levels (HIGH, CRITICAL, MEDIUM) and fail the job if found
-               /* script {
+                script {
                     // Parse the dependency-check report XML
                     def report = readFile('dependency-check-report.xml')
                     def critical = report.contains('<severity>CRITICAL</severity>')
@@ -75,7 +75,7 @@ pipeline {
                     if (critical || high || medium) {
                         error("Build failed due to critical or high severity issues in dependency check report")
                     }
-                } */
+                } 
             }
         }
         stage('Generate SBOM') {
