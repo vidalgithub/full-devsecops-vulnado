@@ -40,7 +40,7 @@ pipeline {
                 }
             }
         } */
-
+        /*
         stage('Dependency Check - ODC') {
             steps {
                 dependencyCheck additionalArguments: '--nvdApiKey ${NVDAPIKEY}', odcInstallation: 'dep-check-auto'
@@ -48,8 +48,37 @@ pipeline {
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'dependency-check-report.xml', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
                 sh ' rm -rf dependency-check-report.xml*'
             }
+        }*/
+        stage('Dependency Check - ODC') {
+            steps {
+                // Run dependency check
+                dependencyCheck additionalArguments: '--nvdApiKey ${NVDAPIKEY}', odcInstallation: 'dep-check-auto'
+                
+                // Publish the report
+                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+                
+                // Archive the report
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'dependency-check-report.xml', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                
+                // Remove the report files after the build
+                sh 'rm -rf dependency-check-report.xml*'
+                
+                // Check for severity levels (HIGH, CRITICAL, MEDIUM) and fail the job if found
+               /* script {
+                    // Parse the dependency-check report XML
+                    def report = readFile('dependency-check-report.xml')
+                    def critical = report.contains('<severity>CRITICAL</severity>')
+                    def high = report.contains('<severity>HIGH</severity>')
+                    def medium = report.contains('<severity>MEDIUM</severity>')
+        
+                    // Fail the build if any of the severities are found
+                    if (critical || high || medium) {
+                        error("Build failed due to critical or high severity issues in dependency check report")
+                    }
+                } */
+            }
         }
-       stage('Generate SBOM') {
+        stage('Generate SBOM') {
             steps {
                 sh '''
                 syft scan dir:. --output cyclonedx-json=sbom.json
