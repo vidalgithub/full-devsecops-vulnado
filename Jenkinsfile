@@ -49,7 +49,7 @@ pipeline {
                 sh ' rm -rf dependency-check-report.xml*'
             }
         }*/
-        stage('Dependency Check - ODC') { 
+        /*stage('Dependency Check - ODC') { 
             steps {
                 // Run dependency check
                 dependencyCheck additionalArguments: '--nvdApiKey ${NVDAPIKEY}', odcInstallation: 'dep-check-auto'
@@ -74,7 +74,33 @@ pipeline {
                     }
                 }
             }
-        }           
+        }*/
+        stage('Dependency Check - ODC') {  
+            steps {
+                // Run dependency check
+                dependencyCheck additionalArguments: '--nvdApiKey ${NVDAPIKEY}', odcInstallation: 'dep-check-auto'
+                
+                // Publish the report
+                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+                
+                // Archive the report
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'dependency-check-report.xml', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
+                
+                // Remove the report files after the build
+                sh 'rm -rf dependency-check-report.xml*'
+                
+                // Check for 'confidence="LOW"' and fail the job if found
+                script {
+                    // Use cat and grep to check for 'confidence="LOW"' in the report
+                    def lowConfidenceCheck = sh(script: "cat dependency-check-report.xml | grep -i 'confidence=\"LOW\"'", returnStatus: true)
+                    
+                    // If the grep command finds any matching lines, it will return a non-zero status, so we fail the build
+                    if (lowConfidenceCheck == 0) {
+                        error("Build failed due to low confidence issues in the dependency check report")
+                    }
+                }
+            }
+        }
         stage('Generate SBOM') {
             steps {
                 sh '''
