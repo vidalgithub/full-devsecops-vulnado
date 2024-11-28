@@ -110,7 +110,7 @@ pipeline {
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'grype.txt', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
                 sh ' rm -rf grype.txt'
             }
-        }
+        }/*
         stage('DAST - OWASP ZAP') {
             steps {
                 
@@ -126,6 +126,6 @@ pipeline {
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'report-zap-cli-jenkins.md', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
                 sh ' rm -rf report-zap-cli-jenkins.md'
             }
-        }
+        }*/
     }
 }
