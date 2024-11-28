@@ -61,7 +61,7 @@ pipeline {
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'dependency-check-report.xml', fingerprint: true, followSymlinks: false, onlyIfSuccessful: true
                 
                 // Remove the report files after the build
-                sh 'rm -rf dependency-check-report.xml*'
+                //#sh 'rm -rf dependency-check-report.xml*'
                 
                 // Check for severity levels (HIGH, CRITICAL, MEDIUM) and fail the job if found
                 script {
